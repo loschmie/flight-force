@@ -83,7 +83,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ 
       error: true,
       message: 'We are currently unable to automatically verify this flight. However, you can proceed manually to generate your demand letter.',
-      // Vraćamo dummy podatke kako bi forma u provera/page.tsx mogla da obradi ovo i ne pukne
+      // Vraćamo dummy podatke kako bi forma u check/page.tsx mogla da obradi ovo i ne pukne
       eligible: true, 
       arrivalDelay: 250, 
       departureAirport: 'BEG', 

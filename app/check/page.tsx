@@ -42,7 +42,7 @@ export default function Provera() {
           ops: data.opsNormal !== false ? '1' : '0'
         }).toString();
         
-        router.push(`/rezultat?${queryParams}`);
+        router.push(`/result?${queryParams}`);
       } else {
         setError('Delay too short for compensation.');
       }
