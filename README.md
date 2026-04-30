@@ -1,36 +1,41 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# FlightForce: Pravna Odšteta za Letove
 
-## Getting Started
+FlightForce je moderan i ultra-brz Next.js (App Router) sistem koji pomaže putnicima da provere svoj let i generišu pravno obavezujući PDF zahtev za odštetu na osnovu EU Regulative 261/2004 i ECAA sporazuma.
 
-First, run the development server:
+## 🔥 Funkcionalnosti
+- **Maksimalna brzina**: Optimizovano za LCP ispod 1.2s korišćenjem sistemskih fontova i Tailwind CSS-a.
+- **Aviationstack Integracija**: Pretraga kašnjenja u realnom vremenu uz "Failover" mehanizam u slučaju zastoja API-ja.
+- **Haversine Kalkulacija**: Automatsko merenje vazdušne linije između aerodroma zarad preciznog obračuna odštete (250€ ili 600€).
+- **Liar Detector & Privatnost**: Puna klijentska generacija PDF zahteva u pretraživaču preko `jsPDF`. Svi unosi (poput IBAN-a i imena) nikada ne napuštaju korisnikov uređaj.
+- **Monetizacija**: Ugrađen affiliate preusmerivač za AirHelp i slične partnere (No-Win-No-Fee).
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🚀 Lokalno pokretanje
+1. Otvorite terminal i instalirajte module: 
+   ```bash
+   npm install
+   ```
+2. Kreirajte fajl pod nazivom `.env.local` u root direktorijumu i ubacite svoj ključ:
+   ```env
+   AVIATIONSTACK_API_KEY=vaš_aviationstack_kljuc_ovde
+   ```
+3. Pokrenite lokalni server: 
+   ```bash
+   npm run dev
+   ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🌍 Vercel Deploy (Produkcija)
+Projekat je savršeno optimizovan za **Vercel** platformu.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Kako postaviti API ključ na Vercelu?
+Kada prebacite kod na GitHub i povežete ga sa Vercel platformom, potrebno je da pre prvog bilda (ili nakon njega) podesite sigurnosne varijable kako bi backend rute funkcionisale.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Ulogujte se na [Vercel Dashboard](https://vercel.com/dashboard).
+2. Otvorite vaš FlightForce projekat i idite na karticu **Settings**.
+3. Sa leve strane izaberite **Environment Variables**.
+4. U formi za dodavanje unesite sledeće:
+   - **Key**: `AVIATIONSTACK_API_KEY`
+   - **Value**: *[Unesite vaš stvarni Aviationstack Access Key]*
+5. Ostavite obeležena polja za Production, Preview i Development okruženja i kliknite **Save**.
+6. Idite na tab **Deployments** i kliknite **Redeploy** na vašem najnovijem komitu kako bi se ključ primenio na aktivan server.
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Nakon ovoga, vaš Next.js backend će bezbedno komunicirati sa Aviationstack-om, a vaš ključ nikada neće biti vidljiv korisnicima u pretraživaču.
