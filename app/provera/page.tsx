@@ -20,16 +20,14 @@ export default function Provera() {
     try {
       const res = await fetch(`/api/flight-check?flightNumber=${encodeURIComponent(flightNumber)}&date=${encodeURIComponent(date)}`);
       
-      if (!res.ok) {
-        throw new Error('Let nije pronađen ili je došlo do greške na serveru.');
-      }
-      
       const data = await res.json();
 
       if (data.error) {
-        // Ako API padne, pitamo korisnika da li zeli da nastavi rucno
-        const proceed = window.confirm(data.message + "\n\nDa li želite da nastavite i ručno preuzmete PDF sa pretpostavljenim parametrima?");
-        if (!proceed) return;
+        const proceed = window.confirm(data.message + "\n\nDo you want to proceed manually and generate a PDF with default parameters?");
+        if (!proceed) {
+          setIsLoading(false);
+          return;
+        }
       }
 
       if (data.eligible || data.error) {
@@ -37,18 +35,19 @@ export default function Provera() {
           name,
           flightNumber,
           date,
-          delay: data.arrivalDelay.toString(),
+          delay: data.arrivalDelay?.toString() || '240',
           from: data.departureAirport || 'BEG',
-          to: data.arrivalAirport || 'CDG'
+          to: data.arrivalAirport || 'CDG',
+          weather: data.weatherClear !== false ? '1' : '0',
+          ops: data.opsNormal !== false ? '1' : '0'
         }).toString();
         
         router.push(`/rezultat?${queryParams}`);
       } else {
-        setError('Nažalost, ovaj let nije podoban za odštetu (kašnjenje je manje od 240 minuta).');
+        setError('Delay too short for compensation.');
       }
     } catch (err: any) {
-      setError(err.message || 'Došlo je do neočekivane greške prilikom provere leta.');
-    } finally {
+      setError('Flight not found.');
       setIsLoading(false);
     }
   };
@@ -58,13 +57,13 @@ export default function Provera() {
       <div className="max-w-md w-full bg-white p-8 rounded-2xl shadow-sm space-y-6">
         <div className="space-y-2">
           <Link href="/" className="text-sm text-slate-500 hover:text-slate-900 transition-colors">
-            ← Nazad
+            ← Back
           </Link>
           <h1 className="text-2xl font-bold text-slate-900">
-            Unesite podatke o letu
+            Enter Flight Details
           </h1>
           <p className="text-sm text-slate-500">
-            Proverite da li imate pravo na odštetu u nekoliko sekundi.
+            Check if you're eligible for compensation in seconds.
           </p>
         </div>
 
@@ -77,7 +76,7 @@ export default function Provera() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <label htmlFor="name" className="block text-sm font-medium text-slate-700">
-              Ime i prezime
+              Full Name
             </label>
             <input
               type="text"
@@ -87,13 +86,13 @@ export default function Provera() {
               required
               disabled={isLoading}
               className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all disabled:opacity-50 disabled:bg-slate-50"
-              placeholder="Petar Petrović"
+              placeholder="John Doe"
             />
           </div>
 
           <div className="space-y-2">
             <label htmlFor="flightNumber" className="block text-sm font-medium text-slate-700">
-              Broj leta (npr. W6 4051)
+              Flight Number (e.g. JU501)
             </label>
             <input
               type="text"
@@ -103,13 +102,13 @@ export default function Provera() {
               required
               disabled={isLoading}
               className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all uppercase disabled:opacity-50 disabled:bg-slate-50"
-              placeholder="W6 4051"
+              placeholder="JU501"
             />
           </div>
 
           <div className="space-y-2">
             <label htmlFor="date" className="block text-sm font-medium text-slate-700">
-              Datum leta
+              Departure Date
             </label>
             <input
               type="date"
@@ -138,10 +137,10 @@ export default function Provera() {
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                Proveravamo bazu...
+                Analyzing flight data from 2026 database...
               </>
             ) : (
-              'Proveri status leta'
+              'CHECK ELIGIBILITY'
             )}
           </button>
         </form>
