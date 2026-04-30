@@ -1,41 +1,41 @@
-# FlightForce: Pravna Odšteta za Letove
+# FlightForce: 2026 Flight Compensation & Refund Tool ✈️⚖️
 
-FlightForce je moderan i ultra-brz Next.js (App Router) sistem koji pomaže putnicima da provere svoj let i generišu pravno obavezujući PDF zahtev za odštetu na osnovu EU Regulative 261/2004 i ECAA sporazuma.
+FlightForce is a high-performance Next.js (App Router) LegalTech application designed to help passengers fight back against airlines. It automatically verifies flight data, checks historical weather conditions, analyzes airport traffic, and generates legally forceful PDF demand letters based on the EC 261/2004 Regulation and US DOT mandates.
 
-## 🔥 Funkcionalnosti
-- **Maksimalna brzina**: Optimizovano za LCP ispod 1.2s korišćenjem sistemskih fontova i Tailwind CSS-a.
-- **Aviationstack Integracija**: Pretraga kašnjenja u realnom vremenu uz "Failover" mehanizam u slučaju zastoja API-ja.
-- **Haversine Kalkulacija**: Automatsko merenje vazdušne linije između aerodroma zarad preciznog obračuna odštete (250€ ili 600€).
-- **Liar Detector & Privatnost**: Puna klijentska generacija PDF zahteva u pretraživaču preko `jsPDF`. Svi unosi (poput IBAN-a i imena) nikada ne napuštaju korisnikov uređaj.
-- **Monetizacija**: Ugrađen affiliate preusmerivač za AirHelp i slične partnere (No-Win-No-Fee).
+## 🔥 The "Truth Engine" Features
+- **Weather Verification (METAR)**: Automatically fetches raw historical pilot weather data (VFR conditions) via CheckWX to aggressively counter false "adverse weather" airline excuses.
+- **Operational Pattern Recognition**: Analyzes overall airport departure traffic. If 90%+ of flights departed successfully, it flags the delay as a specific internal carrier failure.
+- **Evidence Tracker & Client-Side PDF Generation**: Provides users with an Evidence Tracker UI and uses `jsPDF` to generate authoritative demand letters directly in the browser. Sensitive IBAN and personal data **never** touch the server.
+- **SRE-Level Resilience**: Built-in 15-minute SWR caching to save API limits and robust fail-safe `try/catch` fallbacks to ensure the app never crashes, even if third-party APIs go down.
+- **Built-in Monetization**: Includes an integrated "No Win - No Fee" affiliate section (e.g., AirHelp) for users who prefer legal partners to handle the lawsuit.
 
-## 🚀 Lokalno pokretanje
-1. Otvorite terminal i instalirajte module: 
+## 🚀 Local Development Setup
+
+1. Open your terminal and install dependencies:
    ```bash
    npm install
    ```
-2. Kreirajte fajl pod nazivom `.env.local` u root direktorijumu i ubacite svoj ključ:
+2. Create a `.env.local` file in the root directory and add your API keys:
    ```env
-   AVIATIONSTACK_API_KEY=vaš_aviationstack_kljuc_ovde
+   AVIATIONSTACK_API_KEY=your_aviationstack_key
+   CHECKWX_API_KEY=your_checkwx_key
    ```
-3. Pokrenite lokalni server: 
+   *You can get free API keys by registering at [Aviationstack](https://aviationstack.com/) and [CheckWX](https://www.checkwxapi.com/).*
+
+3. Start the local server:
    ```bash
    npm run dev
    ```
 
-## 🌍 Vercel Deploy (Produkcija)
-Projekat je savršeno optimizovan za **Vercel** platformu.
+## 🌍 Vercel Deployment (Production)
 
-### Kako postaviti API ključ na Vercelu?
-Kada prebacite kod na GitHub i povežete ga sa Vercel platformom, potrebno je da pre prvog bilda (ili nakon njega) podesite sigurnosne varijable kako bi backend rute funkcionisale.
+This project is heavily optimized for global **Vercel** deployment (Edge CDN).
 
-1. Ulogujte se na [Vercel Dashboard](https://vercel.com/dashboard).
-2. Otvorite vaš FlightForce projekat i idite na karticu **Settings**.
-3. Sa leve strane izaberite **Environment Variables**.
-4. U formi za dodavanje unesite sledeće:
-   - **Key**: `AVIATIONSTACK_API_KEY`
-   - **Value**: *[Unesite vaš stvarni Aviationstack Access Key]*
-5. Ostavite obeležena polja za Production, Preview i Development okruženja i kliknite **Save**.
-6. Idite na tab **Deployments** i kliknite **Redeploy** na vašem najnovijem komitu kako bi se ključ primenio na aktivan server.
+1. Push your code to your GitHub repository.
+2. Go to your [Vercel Dashboard](https://vercel.com/dashboard) and click **Import Project**.
+3. Under the **Environment Variables** section, you **MUST** add both keys securely:
+   - `AVIATIONSTACK_API_KEY`
+   - `CHECKWX_API_KEY`
+4. Click **Deploy**.
 
-Nakon ovoga, vaš Next.js backend će bezbedno komunicirati sa Aviationstack-om, a vaš ključ nikada neće biti vidljiv korisnicima u pretraživaču.
+Next.js will automatically compile the application and securely use these environment variables on the server-side API routes, keeping them completely completely hidden from frontend users.
