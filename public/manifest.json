@@ -1,6 +1,6 @@
 {
-  "name": "FlightForce",
-  "short_name": "FlightForce",
+  "name": "GetFlightForce",
+  "short_name": "GetFlightForce",
   "description": "Reclaim Your Flight Compensation",
   "start_url": "/",
   "display": "standalone",

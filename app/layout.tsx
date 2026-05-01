@@ -2,14 +2,14 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "FlightForce | 2026 Flight Compensation & Refund Tool",
+  title: "GetFlightForce | 2026 Flight Compensation & Refund Tool",
   description: "Generate legal demand letters for delayed or cancelled flights under EC 261/2004 and US DOT mandates. Reclaim up to €600.",
   keywords: "flight delay compensation, airline refund, EC 261 demand letter, 2026 flight rights",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "FlightForce",
+    title: "GetFlightForce",
   },
 };
 
@@ -50,7 +50,7 @@ export default function RootLayout({
           {children}
         </div>
         <footer className="w-full py-6 text-center text-slate-400 text-xs px-6 mt-auto">
-          Disclaimer: FlightForce is a self-help tool providing legal information, not legal advice. We are not a law firm. Use of this generated document is at your own risk.
+          Disclaimer: GetFlightForce is a self-help tool providing legal information, not legal advice. We are not a law firm. Use of this generated document is at your own risk.
         </footer>
       </body>
     </html>

@@ -1,6 +1,6 @@
-# FlightForce: 2026 Flight Compensation & Refund Tool ✈️⚖️
+# GetFlightForce: 2026 Flight Compensation & Refund Tool ✈️⚖️
 
-FlightForce is a high-performance Next.js (App Router) LegalTech application designed to help passengers fight back against airlines. It automatically verifies flight data, checks historical weather conditions, analyzes airport traffic, and generates legally forceful PDF demand letters based on the EC 261/2004 Regulation and US DOT mandates.
+GetFlightForce is a high-performance Next.js (App Router) LegalTech application designed to help passengers fight back against airlines. It automatically verifies flight data, checks historical weather conditions, analyzes airport traffic, and generates legally forceful PDF demand letters based on the EC 261/2004 Regulation and US DOT mandates.
 
 ## 🔥 Key Features
 
@@ -14,7 +14,7 @@ FlightForce is a high-performance Next.js (App Router) LegalTech application des
 - **100% Private**: Image processing happens strictly in the client's browser—images never touch our servers.
 
 ### 3. PWA & "Airport Mode" UX
-- **Progressive Web App (PWA)**: Users can install FlightForce directly to their iOS/Android home screens. A built-in Service Worker (`sw.js`) caches the core app shell to ensure the app loads even if the airport Wi-Fi drops.
+- **Progressive Web App (PWA)**: Users can install GetFlightForce directly to their iOS/Android home screens. A built-in Service Worker (`sw.js`) caches the core app shell to ensure the app loads even if the airport Wi-Fi drops.
 - **Thumb-Friendly Design**: Touch targets (buttons, inputs) are oversized (min 48px-64px) for easy tapping while walking through an airport with luggage.
 - **Safe Area Support**: Fully optimized for the iPhone notch and bottom home indicator.
 
