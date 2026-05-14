@@ -49,9 +49,7 @@ export default function RootLayout({
         <div className="flex-1 flex flex-col">
           {children}
         </div>
-        <footer className="w-full py-6 text-center text-slate-400 text-xs px-6 mt-auto">
-          Disclaimer: GetFlightForce is a self-help tool providing legal information, not legal advice. We are not a law firm. Use of this generated document is at your own risk.
-        </footer>
+
       </body>
     </html>
   );

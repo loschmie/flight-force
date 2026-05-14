@@ -6,7 +6,6 @@ import Link from 'next/link';
 
 export default function Provera() {
   const router = useRouter();
-  const [name, setName] = useState('');
   const [flightNumber, setFlightNumber] = useState('');
   const [date, setDate] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -90,7 +89,6 @@ export default function Provera() {
 
       if (data.eligible || data.error) {
         const queryParams = new URLSearchParams({
-          name,
           flightNumber,
           date,
           delay: data.arrivalDelay?.toString() || '240',
@@ -111,7 +109,7 @@ export default function Provera() {
   };
 
   return (
-    <main className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6 font-sans">
+    <main className="flex-1 w-full bg-slate-50 flex flex-col items-center justify-center p-6 font-sans">
       <div className="max-w-md w-full bg-white p-8 rounded-2xl shadow-sm space-y-6">
         <div className="space-y-2">
           <Link href="/" className="text-sm text-slate-500 hover:text-slate-900 transition-colors">
@@ -162,22 +160,6 @@ export default function Provera() {
               Scan Boarding Pass
             </label>
           </div>
-          <div className="space-y-2">
-            <label htmlFor="name" className="block text-sm font-medium text-slate-700">
-              Full Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-              disabled={isLoading}
-              className="w-full px-4 min-h-[48px] rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition-all disabled:opacity-50 disabled:bg-slate-50"
-              placeholder="John Doe"
-            />
-          </div>
-
           <div className="space-y-2">
             <label htmlFor="flightNumber" className="block text-sm font-medium text-slate-700">
               Flight Number (e.g. JU501)

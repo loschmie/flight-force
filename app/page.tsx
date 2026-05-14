@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-slate-50 flex flex-col items-center justify-center p-6 font-sans">
+    <main className="flex-1 w-full bg-slate-50 flex flex-col items-center justify-center p-6 font-sans">
       <div className="max-w-md w-full text-center space-y-6">
         <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">
           Stop Being Milked by Airlines.
