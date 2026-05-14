@@ -12,6 +12,8 @@ export default function Provera() {
   const [error, setError] = useState('');
   const [isScanning, setIsScanning] = useState(false);
   const [scanStatus, setScanStatus] = useState('');
+  const [pnr, setPnr] = useState('');
+  const [fullName, setFullName] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImageScan = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,49 +22,29 @@ export default function Provera() {
 
     setIsScanning(true);
     setError('');
-    setScanStatus('Loading OCR engine...');
+    setScanStatus('Scanning barcode/QR...');
 
     try {
-      const Tesseract = (await import('tesseract.js')).default;
-      setScanStatus('Analyzing image locally...');
+      const { Html5Qrcode } = await import('html5-qrcode');
+      const html5QrCode = new Html5Qrcode("reader");
+      const decodedText = await html5QrCode.scanFile(file, false);
       
-      const result = await Tesseract.recognize(file, 'eng', {
-        logger: m => {
-          if (m.status === 'recognizing text') {
-            setScanStatus(`Analyzing... ${Math.floor(m.progress * 100)}%`);
-          }
-        }
-      });
+      const { parseBCBP } = await import('@/lib/bcbp-parser');
+      const data = parseBCBP(decodedText);
       
-      const text = result.data.text;
+      setFlightNumber(data.flightNumber);
+      setDate(data.date);
+      setPnr(data.pnr);
+      setFullName(data.fullName);
+      setScanStatus('Barcode recognized perfectly!');
       
-      const flightRegex = /\b([A-Z]{2}|[A-Z][0-9]|[0-9][A-Z])\s*(\d{3,4})\b/i;
-      const flightMatch = text.match(flightRegex);
-      
-      if (flightMatch) {
-        const cleanedFlight = (flightMatch[1] + flightMatch[2]).toUpperCase();
-        setFlightNumber(cleanedFlight);
-      } else {
-        setError('Could not automatically detect flight number. Please check the image or enter manually.');
-      }
-
-      const dateRegex = /\b(\d{1,2}[\/\-\.]\d{1,2}[\/\-\.]\d{2,4}|\d{1,2}\s*(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s*\d{2,4}?)\b/i;
-      const dateMatch = text.match(dateRegex);
-      
-      if (dateMatch) {
-        const parsedDate = new Date(dateMatch[0]);
-        if (!isNaN(parsedDate.getTime())) {
-          const formattedDate = parsedDate.toISOString().split('T')[0];
-          setDate(formattedDate);
-        }
-      }
-      
+      setTimeout(() => setIsScanning(false), 1500);
     } catch (err) {
-      console.error('OCR Error:', err);
-      setError('An error occurred during image scan. Please enter details manually.');
-    } finally {
+      console.error('Scan Error:', err);
+      setError('Could not find a valid barcode on the boarding pass. Please ensure the code is clear and well-lit.');
       setIsScanning(false);
       setScanStatus('');
+    } finally {
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
@@ -88,9 +70,34 @@ export default function Provera() {
       }
 
       if (data.eligible || data.error) {
+        
+        // CREATE CLAIM AS PENDING IN DB (Capture Lead)
+        let claimId = '';
+        try {
+          const createRes = await fetch('/api/claims/create', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+              flightNumber, 
+              fullName: fullName || 'Unknown Passenger', 
+              pnr: pnr || 'UNKNOWN', 
+              airlineEmail: 'claims@getflightforce.com' 
+            })
+          });
+          const createData = await createRes.json();
+          if (createData.success) {
+            claimId = createData.claimId;
+          }
+        } catch (dbErr) {
+          console.error("Failed to create claim lead:", dbErr);
+        }
+
         const queryParams = new URLSearchParams({
           flightNumber,
           date,
+          pnr,
+          fullName,
+          claimId,
           delay: data.arrivalDelay?.toString() || '240',
           from: data.departureAirport || 'BEG',
           to: data.arrivalAirport || 'CDG',
@@ -110,6 +117,7 @@ export default function Provera() {
 
   return (
     <main className="flex-1 w-full bg-slate-50 flex flex-col items-center justify-center p-6 font-sans">
+      <div id="reader" style={{ display: 'none' }}></div>
       <div className="max-w-md w-full bg-white p-8 rounded-2xl shadow-sm space-y-6">
         <div className="space-y-2">
           <Link href="/" className="text-sm text-slate-500 hover:text-slate-900 transition-colors">
@@ -214,6 +222,12 @@ export default function Provera() {
             )}
           </button>
         </form>
+      </div>
+
+      <div className="mt-6 text-center max-w-md w-full px-4">
+        <p className="text-xs text-slate-400 leading-relaxed">
+          Disclaimer: GetFlightForce is a self-help tool providing legal information, not legal advice. We are not a law firm. Use of this service is at your own risk.
+        </p>
       </div>
     </main>
   );

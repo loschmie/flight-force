@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getClaimById, updateClaimStatus } from '@/lib/storage';
+import { getClaimById, updateClaimStatus, updateClaimDetails } from '@/lib/storage';
 import { generateDemandPDF, generateInvoicePDF } from '@/lib/pdf-generator';
 import { sendEmail } from '@/lib/email-service';
 import fs from 'fs';
@@ -15,16 +15,21 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Claim not found' }, { status: 404 });
     }
 
-    // 1. Mark as paid
-    await updateClaimStatus(claimId, 'paid');
-
     // Load airline emails mapping
     const emailsPath = path.join(process.cwd(), 'lib/airlineEmails.json');
     const airlineEmails = JSON.parse(fs.readFileSync(emailsPath, 'utf-8'));
     
     // Extract airline code (e.g. JU from JU501)
-    const airlineCode = claim.flight_number.substring(0, 2).toUpperCase();
+    const airlineCode = claimData.flightNumber.substring(0, 2).toUpperCase();
     const targetAirlineEmail = airlineEmails[airlineCode] || airlineEmails['DEFAULT'];
+
+    // 1. Mark as paid and update details
+    await updateClaimDetails(claimId, {
+      status: 'paid',
+      passenger_name: claimData.fullName,
+      pnr: claimData.pnr,
+      airline_email: targetAirlineEmail
+    });
 
     // 2. Generate PDFs
     const demandPdfBuffer = await generateDemandPDF(claimData);

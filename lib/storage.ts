@@ -36,6 +36,17 @@ export const updateClaimStatus = async (id: string, status: Claim['status']) => 
   return data?.[0];
 };
 
+export const updateClaimDetails = async (id: string, updates: Partial<Claim>) => {
+  const { data, error } = await supabase
+    .from('claims')
+    .update(updates)
+    .eq('id', id)
+    .select();
+
+  if (error) throw error;
+  return data?.[0];
+};
+
 export const getClaimById = async (id: string): Promise<Claim | undefined> => {
   const { data, error } = await supabase
     .from('claims')

@@ -14,6 +14,12 @@ export default function Home() {
           Start Your Claim Now →
         </Link>
       </div>
+
+      <div className="mt-12 text-center max-w-md w-full px-4">
+        <p className="text-xs text-slate-400 leading-relaxed">
+          Disclaimer: GetFlightForce is a self-help tool providing legal information, not legal advice. We are not a law firm. Use of this service is at your own risk.
+        </p>
+      </div>
     </main>
   );
 }

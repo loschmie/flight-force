@@ -9,9 +9,16 @@ import Link from 'next/link';
 
 function RezultatContent() {
   const searchParams = useSearchParams();
+  // Data from URL
+  const flightNumber = searchParams.get("flightNumber") || searchParams.get("flight") || "Unknown";
+  const date = searchParams.get("date") || "[Date]";
+  const pnrParam = searchParams.get("pnr") || "";
+  const fullNameParam = searchParams.get("fullName") || "";
+  const claimId = searchParams.get("claimId") || "";
+
   const [step, setStep] = useState(1);
-  const [fullName, setFullName] = useState("");
-  const [pnr, setPnr] = useState("");
+  const [fullName, setFullName] = useState(fullNameParam);
+  const [pnr, setPnr] = useState(pnrParam);
   const [address, setAddress] = useState("");
   const [email, setEmail] = useState("");
   const [iban, setIban] = useState("");
@@ -20,8 +27,7 @@ function RezultatContent() {
   const [liarCheck, setLiarCheck] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  // Data from URL
-  const flightNumber = searchParams.get("flightNumber") || searchParams.get("flight") || "Unknown";
+
   const delayMinutes = parseInt(searchParams.get("delay") || "0");
   const from = searchParams.get("from") || "BEG";
   const to = searchParams.get("to") || "CDG";
@@ -39,19 +45,13 @@ function RezultatContent() {
   const handleProxyDispatch = async () => {
     setIsProcessing(true);
     try {
-      const createRes = await fetch('/api/claims/create', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ flightNumber, fullName, pnr, airlineEmail: 'claims@getflightforce.com' })
-      });
-      const createData = await createRes.json();
-      if (!createData.success) throw new Error("Failed to create claim");
+      if (!claimId) throw new Error("Missing Claim ID");
 
       const webhookRes = await fetch('/api/claims/webhook', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          claimId: createData.claimId,
+          claimId: claimId,
           claimData: { flightNumber, date, fullName, pnr, address, email, delayHours, to, amount: result.amount, currency: result.currency, bankName, iban, swift, from }
         })
       });
