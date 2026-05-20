@@ -16,9 +16,9 @@ export async function POST(request: Request) {
       status: 'pending'
     };
 
-    await saveClaim(claim);
+    const savedClaim = await saveClaim(claim);
 
-    return NextResponse.json({ success: true, claimId: claim.id });
+    return NextResponse.json({ success: true, claimId: savedClaim.id });
   } catch (error: any) {
     console.error('Error creating claim:', error);
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });

@@ -1,13 +1,13 @@
 import React from 'react';
-import ReactPDF, { Document, Page, Text, View, StyleSheet, Font } from '@react-pdf/renderer';
+import ReactPDF, { Document, Page, Text, View, StyleSheet, renderToBuffer } from '@react-pdf/renderer';
 
 const styles = StyleSheet.create({
-  page: { padding: 40, fontFamily: 'Helvetica', fontSize: 12, color: '#333' },
-  header: { marginBottom: 30 },
-  title: { fontSize: 18, fontWeight: 'bold', marginBottom: 10 },
-  subtitle: { fontSize: 14, fontWeight: 'bold', color: '#666', marginBottom: 20 },
-  section: { marginBottom: 15 },
-  text: { marginBottom: 10, lineHeight: 1.5 },
+  page: { padding: 30, fontFamily: 'Helvetica', fontSize: 11, color: '#333' },
+  header: { marginBottom: 20 },
+  title: { fontSize: 16, fontWeight: 'bold', marginBottom: 10 },
+  subtitle: { fontSize: 13, fontWeight: 'bold', color: '#666', marginBottom: 15 },
+  section: { marginBottom: 10 },
+  text: { marginBottom: 5, lineHeight: 1.3 },
   bold: { fontWeight: 'bold' },
   invoiceHeader: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 40 },
   invoiceLogo: { fontSize: 24, fontWeight: 'bold', color: '#2563eb' },
@@ -60,7 +60,7 @@ export const generateDemandPDF = async (data: any) => {
     </Document>
   );
 
-  return await ReactPDF.renderToBuffer(MyDocument);
+  return await renderToBuffer(MyDocument);
 };
 
 export const generateInvoicePDF = async (data: any) => {
@@ -75,12 +75,12 @@ export const generateInvoicePDF = async (data: any) => {
         </View>
         
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 40 }}>
-          <View>
+          <View style={{ width: '50%', paddingRight: 10 }}>
             <Text style={{ color: '#666', marginBottom: 5 }}>Billed To:</Text>
-            <Text style={styles.bold}>{fullName}</Text>
-            <Text>{email}</Text>
+            <Text style={[styles.bold, { flexWrap: 'wrap' }]}>{fullName}</Text>
+            <Text style={{ flexWrap: 'wrap' }}>{email}</Text>
           </View>
-          <View style={{ alignItems: 'flex-end' }}>
+          <View style={{ width: '40%', alignItems: 'flex-end' }}>
             <Text style={{ color: '#666', marginBottom: 5 }}>Invoice Details:</Text>
             <Text>Date: {date}</Text>
             <Text>Reference: {claimId.substring(0, 8)}</Text>
@@ -114,5 +114,5 @@ export const generateInvoicePDF = async (data: any) => {
     </Document>
   );
 
-  return await ReactPDF.renderToBuffer(MyDocument);
+  return await renderToBuffer(MyDocument);
 };

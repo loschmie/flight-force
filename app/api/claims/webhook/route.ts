@@ -15,6 +15,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Claim not found' }, { status: 404 });
     }
 
+    if (claim.status === 'paid' || claim.status === 'dispatched') {
+      return NextResponse.json({ success: true, message: 'Claim already processed' });
+    }
+
     // Load airline emails mapping
     const emailsPath = path.join(process.cwd(), 'lib/airlineEmails.json');
     const airlineEmails = JSON.parse(fs.readFileSync(emailsPath, 'utf-8'));

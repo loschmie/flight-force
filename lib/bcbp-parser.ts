@@ -29,12 +29,8 @@ export function parseBCBP(barcodeData: string) {
       return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
     };
     
-    // Remove title (MR/MRS/MS) if appended to first name without space
-    let cleanFirstName = firstName;
-    if (firstName.endsWith('MR')) cleanFirstName = firstName.slice(0, -2).trim();
-    else if (firstName.endsWith('MRS')) cleanFirstName = firstName.slice(0, -3).trim();
-    else if (firstName.endsWith('MS')) cleanFirstName = firstName.slice(0, -2).trim();
-    else if (firstName.endsWith('MISS')) cleanFirstName = firstName.slice(0, -4).trim();
+    // Remove title (MR/MRS/MS/MISS) safely
+    let cleanFirstName = firstName.replace(/\b(MR|MRS|MS|MISS)$/i, '').trim();
 
     const fullName = cleanFirstName && lastName ? `${capitalize(cleanFirstName)} ${capitalize(lastName)}` : capitalize(lastName);
 
@@ -42,30 +38,25 @@ export function parseBCBP(barcodeData: string) {
 
     // Parse Julian Date into YYYY-MM-DD
     const now = new Date();
-    let currentYear = now.getFullYear();
+    let currentYear = now.getUTCFullYear();
     
-    // Calculate current day of year (1-365/366)
-    const startOfYear = new Date(currentYear, 0, 0);
+    // Calculate current day of year using UTC (1-365/366)
+    const startOfYear = new Date(Date.UTC(currentYear, 0, 0));
     const diff = now.getTime() - startOfYear.getTime();
     const currentDayOfYear = Math.floor(diff / 1000 / 60 / 60 / 24);
 
     let flightDate = '';
     const julianDays = parseInt(julianDateStr, 10);
     if (!isNaN(julianDays)) {
-      // Year rollover heuristic:
-      // If we are early in the year (e.g. Feb, day < 60) and flight is late in year (e.g. Dec, day > 300)
-      // -> Flight happened last year
       if (currentDayOfYear < 60 && julianDays > 300) {
         currentYear -= 1;
-      } 
-      // If we are late in the year (day > 300) and flight is early (day < 60)
-      // -> Flight is early next year
-      else if (currentDayOfYear > 300 && julianDays < 60) {
+      } else if (currentDayOfYear > 300 && julianDays < 60) {
         currentYear += 1;
       }
 
-      const date = new Date(currentYear, 0); // Jan 1st
-      date.setDate(julianDays);
+      // Use UTC to avoid timezone shifts
+      const date = new Date(Date.UTC(currentYear, 0)); // Jan 1st UTC
+      date.setUTCDate(julianDays);
       flightDate = date.toISOString().split('T')[0];
     }
 

@@ -19,10 +19,11 @@ export interface Claim {
 export const saveClaim = async (claim: Claim) => {
   const { data, error } = await supabase
     .from('claims')
-    .insert([claim]);
+    .upsert([claim], { onConflict: 'pnr,flight_number' })
+    .select();
 
   if (error) throw error;
-  return data;
+  return data?.[0] || claim;
 };
 
 export const updateClaimStatus = async (id: string, status: Claim['status']) => {

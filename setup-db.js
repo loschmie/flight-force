@@ -19,11 +19,19 @@ async function run() {
         passenger_name text not null,
         pnr text not null,
         airline_email text not null,
-        status text not null default 'pending'
+        status text not null default 'pending',
+        unique (pnr, flight_number)
       );
     `;
     
     await client.query(query);
+    
+    try {
+      await client.query('ALTER TABLE claims ADD CONSTRAINT claims_pnr_flight_number_key UNIQUE (pnr, flight_number);');
+      console.log("Added unique constraint.");
+    } catch (e) {
+      console.log("Constraint might already exist:", e.message);
+    }
     console.log("Table created successfully!");
   } catch (err) {
     console.error("Error creating table:", err);
