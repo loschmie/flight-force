@@ -32,7 +32,6 @@ function RezultatContent() {
   const from = searchParams.get("from") || "BEG";
   const to = searchParams.get("to") || "CDG";
   const distance = Math.round(getDistanceByIata(from, to));
-  const date = searchParams.get("date") || "[Date]";
   const weatherClear = searchParams.get("weather") !== '0';
   const opsNormal = searchParams.get("ops") !== '0';
   
