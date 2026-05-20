@@ -58,7 +58,7 @@ export async function GET(request: Request) {
       pdfBuffer = await generateDemandPDF(claimData);
     }
 
-    return new NextResponse(pdfBuffer, {
+    return new NextResponse(pdfBuffer as any, {
       headers: {
         'Content-Type': 'application/pdf',
         'Content-Disposition': `inline; filename="test_${type}.pdf"`
