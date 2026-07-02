@@ -116,7 +116,7 @@ function RezultatContent() {
         </div>
         <h1 className="text-3xl font-bold text-slate-800">Payment Successful</h1>
         <p className="text-lg text-slate-600">
-          Your legal demand has been dispatched to the airline's legal department.
+          Your legal demand has been dispatched to the airline&apos;s legal department.
         </p>
         <div className="bg-slate-50 border border-slate-200 rounded-xl p-6 w-full text-left">
           <p className="text-sm text-slate-500 mb-2">Check your email (<strong>{email}</strong>) for:</p>
@@ -251,7 +251,7 @@ function RezultatContent() {
             <label className="flex items-start gap-4 cursor-pointer p-4 bg-slate-50 rounded-xl border border-slate-200">
               <input type="checkbox" checked={liarCheck} onChange={(e) => setLiarCheck(e.target.checked)} className="w-6 h-6 mt-1 rounded border-slate-300 text-blue-600 focus:ring-blue-600" />
               <span className="text-sm text-slate-700 leading-relaxed">
-                <strong>The "Liar Check":</strong> I confirm that the airline verbally informed me of the reason for the delay. I will use the generated independent evidence to counter their claims.
+                <strong>The &quot;Liar Check&quot;:</strong> I confirm that the airline verbally informed me of the reason for the delay. I will use the generated independent evidence to counter their claims.
               </span>
             </label>
           </div>

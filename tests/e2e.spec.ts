@@ -4,7 +4,7 @@ test('E2E claim submission on live Vercel URL', async ({ page }) => {
   // Auto-accept any dialogs (like window.confirm)
   page.on('dialog', dialog => dialog.accept());
 
-  await page.goto('https://flight-force-pqx31ceut-loschmie-4558s-projects.vercel.app/check');
+  await page.goto('https://flight-force-5k507qexk-loschmie-4558s-projects.vercel.app/check');
 
   // Fill in the flight details (simulating barcode scan input)
   await page.fill('#flightNumber', 'JU0501');

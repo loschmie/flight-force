@@ -29,8 +29,8 @@ export function parseBCBP(barcodeData: string) {
       return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
     };
     
-    // Remove title (MR/MRS/MS/MISS) safely
-    let cleanFirstName = firstName.replace(/\b(MR|MRS|MS|MISS)$/i, '').trim();
+    // Extract just the first name (usually everything before a space or MR/MRS)
+    const cleanFirstName = firstName.replace(/(MR|MRS|MS|MISS)$/i, '').trim();
 
     const fullName = cleanFirstName && lastName ? `${capitalize(cleanFirstName)} ${capitalize(lastName)}` : capitalize(lastName);
 
