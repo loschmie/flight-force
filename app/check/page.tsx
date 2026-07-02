@@ -49,7 +49,7 @@ export default function Provera() {
       
       const initScanner = async () => {
         try {
-          const { Html5Qrcode } = await import('html5-qrcode');
+          const { Html5Qrcode, Html5QrcodeSupportedFormats } = await import('html5-qrcode');
           
           if (!isMounted || scannerRef.current) return;
           
@@ -58,11 +58,19 @@ export default function Provera() {
           
           setScanStatus('Initializing camera...');
           
-          // PDF417 is the standard for Boarding Passes, but sometimes Aztec or QR is used
+          // PDF417 is the standard for Boarding Passes
+          // Removing qrbox allows scanning the full frame, which is much better for wide PDF417 codes.
           const config = { 
-            fps: 10, 
-            qrbox: { width: 300, height: 150 },
-            aspectRatio: 1.0,
+            fps: 10,
+            formatsToSupport: [
+              Html5QrcodeSupportedFormats.PDF_417,
+              Html5QrcodeSupportedFormats.AZTEC,
+              Html5QrcodeSupportedFormats.QR_CODE,
+              Html5QrcodeSupportedFormats.DATA_MATRIX
+            ],
+            experimentalFeatures: {
+              useBarCodeDetectorIfSupported: true
+            }
           };
           
           await html5QrCode.start(
